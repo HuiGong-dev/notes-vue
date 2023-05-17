@@ -110,6 +110,7 @@ export default {
   width: 100%;
   height: 150px;
   font-size: 17px;
+  padding: 3px 7px;
 }
 
 .form-control p {
