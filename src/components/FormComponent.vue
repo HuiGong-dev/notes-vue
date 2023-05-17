@@ -84,6 +84,9 @@ export default {
     focusTitle() {
       this.$refs.titleInput.focus();
     },
+    blurTitle() {
+      this.$refs.titleInput.blur();
+    },
   },
 };
 </script>
