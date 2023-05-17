@@ -4,6 +4,7 @@
       <div class="form-control">
         <label class="title">Title:</label>
         <input
+          ref="titleInput"
           v-model="title"
           type="text"
           id="title"
@@ -28,20 +29,39 @@
 
 <script>
 export default {
+  props: {
+    formData: Object,
+  },
   data() {
     return {
       title: '',
       text: '',
       date: '',
+      isEdit: false,
+      id: null,
     };
+  },
+  watch: {
+    formData(newData) {
+      if (newData.title === '') {
+        return;
+      } else {
+        this.title = newData.title;
+        this.text = newData.text;
+        this.date = newData.date;
+        this.isEdit = true;
+        this.id = newData.id;
+      }
+    },
   },
   methods: {
     onSubmit(e) {
       e.preventDefault();
-      if (this.text.trim().length === 0 || this.title.trim().length === 0) {
+      if (this.text.trim() === '' || this.title.trim() === '') {
         alert('Title and Text can not be empty.');
         return;
       }
+
       const formData = {
         id: Math.floor(Math.random() * 100000),
         title: this.title,
@@ -49,12 +69,20 @@ export default {
         date: this.date,
       };
 
-      this.$emit('form-submitted', formData);
+      this.isEdit
+        ? this.$emit('note-updated', { ...formData, id: this.id })
+        : this.$emit('form-submitted', formData);
 
       // clear the Form
       this.title = '';
       this.text = '';
       this.date = '';
+      // reset status
+      this.id = null;
+      this.isEdit = false;
+    },
+    focusTitle() {
+      this.$refs.titleInput.focus();
     },
   },
 };
